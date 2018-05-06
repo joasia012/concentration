@@ -8,11 +8,25 @@
 
 import Foundation
 
-class Concentration {
+struct Concentration {
     
     private(set) var cards = [Card]()
+    var scoreDidChange: ((Int) -> Void)?
     
-    var score: Int = 0
+    var score: Int = 0 {
+        didSet {
+            scoreDidChange?(score)
+        }
+    }
+    
+    var flipCountDidChange: ((Int) -> Void)?
+    
+    var flipCount: Int = 0 {
+        didSet {
+            flipCountDidChange?(flipCount)
+        }
+    }
+    
     private var alreadySeen = [Int]()
     
     private var indexOfOneAndOnlyFaceUpCard: Int? {
@@ -36,7 +50,9 @@ class Concentration {
         }
     }
     
-    func startNewGame() {
+    mutating func startNewGame() {
+        flipCount = 0
+        score = 0
         alreadySeen.removeAll()
         cards.shuffle()
         for index in cards.indices {
@@ -45,9 +61,10 @@ class Concentration {
         }
     }
      
-    func chooseCard(at index: Int) {
+    mutating func chooseCard(at index: Int) {
         assert(cards.indices.contains(index),"Concentration.chooseCard(at: \(index)): chosen index not in the cards")
         if !cards[index].isMatched {
+            flipCount += 1
             if let matchIntex = indexOfOneAndOnlyFaceUpCard, matchIntex != index {
                 if cards[matchIntex].identifier == cards[index].identifier {
                     cards[matchIntex].isMatched = true
