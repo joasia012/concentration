@@ -8,9 +8,12 @@
 
 import Foundation
 
+// dlaczego to jest strukturą?
 struct Concentration {
     
     private(set) var cards = [Card]()
+    
+    // nie rozumiem jak to dziala
     var scoreDidChange: ((Int) -> Void)?
     
     var score: Int = 0 {
@@ -108,6 +111,7 @@ struct Concentration {
     }
 }
 
+// ??
 extension Collection {
     var oneAndOnly: Element? {
         return count == 1 ? first: nil

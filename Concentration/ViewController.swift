@@ -10,6 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    // nie rozumiem chyba tego czym jest lazy i kiedy się tego używa?
     private lazy var game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
     
     var numberOfPairsOfCards: Int {
@@ -33,6 +34,7 @@ class ViewController: UIViewController {
     @IBAction private func newGame(_ sender: UIButton) {
         for index in cardButtons.indices {
             let button = cardButtons[index]
+            // o co chodzi z UIControlState.normal?
             button.setTitle("", for: UIControlState.normal)
             button.backgroundColor = #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
         }
@@ -72,6 +74,7 @@ class ViewController: UIViewController {
         game.scoreDidChange = { [weak self] score in
             self?.scoreLabel.text = "Score: \(score)"
         }
+        // tego nie rozumiem, poza tym to jest też używane jeszcze przy inicjalizacji, dlatego część umieściłam też w funkcji poniżej, ale nie wiem jak przenieść całość
         game.flipCountDidChange = { [weak self] flipCount in
             let attributes: [NSAttributedStringKey:Any] = [
                 .strokeWidth: 5.0,

@@ -12,6 +12,8 @@ struct Card: Hashable {
     
     var hashValue: Int { return identifier }
     
+    
+    // to jest jakieś przeładowanie operatora ==?
     static func ==(lhs: Card, rhs: Card) -> Bool {
         return lhs.identifier == rhs.identifier
     }
