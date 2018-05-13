@@ -41,7 +41,11 @@ class ViewController: UIViewController {
         game.startNewGame()
     }
     
-    @IBOutlet private weak var flipCountLabel: UILabel!
+    @IBOutlet private weak var flipCountLabel: UILabel! {
+        didSet {
+            updateFlipCountLabel()
+        }
+    }
     
     @IBOutlet private var cardButtons: [UIButton]!
     
@@ -69,8 +73,22 @@ class ViewController: UIViewController {
             self?.scoreLabel.text = "Score: \(score)"
         }
         game.flipCountDidChange = { [weak self] flipCount in
-            self?.flipCountLabel.text = "Flips: \(flipCount)"
+            let attributes: [NSAttributedStringKey:Any] = [
+                .strokeWidth: 5.0,
+                .strokeColor: #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+            ]
+            let attributedString = NSAttributedString(string: "Flips: \(flipCount)", attributes: attributes)
+            self?.flipCountLabel.attributedText = attributedString
         }
+    }
+    
+    private func updateFlipCountLabel() {
+        let attributes: [NSAttributedStringKey:Any] = [
+            .strokeWidth: 5.0,
+            .strokeColor: #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+        ]
+        let attributedString = NSAttributedString(string: "Flips: 0", attributes: attributes)
+        flipCountLabel.attributedText = attributedString
     }
     
     private func updateViewFromModel() {
@@ -87,24 +105,24 @@ class ViewController: UIViewController {
         }
     }
 
-    private var emojiHalloween = ["🎃","👻","😱","😈","🙀","🦇","🍎","🍭","🍬"]
-    private var emojiJunkFood = ["🍔","🍟","🍕","🌯","🌭","🥙","🥪","🥞","🍿"]
-    private var emojiSports = ["🏄‍♂️","🏂","🏊‍♀️","🏋️‍♂️","⛷","🚴‍♀️","⛹️‍♂️","🏄‍♀️","🤽‍♂️"]
-    private var emojiAnimals = ["🦉","🐬","🐫","🦔","🐈","🐟","🐁","🦋","🐞"]
-    private var emojiMusic = ["🎤","🎧","🎼","🎹","🥁","🎷","🎺","🎸","🎻"]
-    private var emojiFaces = ["🙈","🙉","🙊","🐵","🐷","🐻","🐼","🐱","🐭"]
+    private var emojiHalloween = "🎃👻😱😈🙀🦇🍎🍭🍬"
+    private var emojiJunkFood = "🍔🍟🍕🌯🌭🥙🥪🥞🍿"
+    private var emojiSports = "🏄‍♂️🏂🏊‍♀️🏋️‍♂️⛷🚴‍♀️⛹️‍♂️🏄‍♀️🤽‍♂️"
+    private var emojiAnimals = "🦉🐬🐫🦔🐈🐟🐁🦋🐞"
+    private var emojiMusic = "🎤🎧🎼🎹🥁🎷🎺🎸🎻"
+    private var emojiFaces = "🙈🙉🙊🐵🐷🐻🐼🐱🐭"
     
-    private var emojiChoices = [[String]]()
-    private var emojiSet = [String]()
+    private var emojiChoices = [String]()
+    private var emojiSet = String()
     
-    private var emoji = [Int:String]()
+    private var emoji = [Card:String]()
     
     private func emoji(for card: Card) -> String {
-        if emoji[card.identifier] == nil, emojiSet.count > 0 {
-            let randomIndex = emojiSet.count.arc4random
-            emoji[card.identifier] = emojiSet.remove(at: randomIndex)
+        if emoji[card] == nil, emojiSet.count > 0 {
+            let randomStringIndex = emojiSet.index(emojiSet.startIndex,offsetBy: emojiSet.count.arc4random)
+            emoji[card] = String(emojiSet.remove(at: randomStringIndex))
         }
-        return emoji[card.identifier]! ?? "?"
+        return emoji[card]! ?? "?"
     }
 }
 

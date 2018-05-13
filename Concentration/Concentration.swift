@@ -31,17 +31,21 @@ struct Concentration {
     
     private var indexOfOneAndOnlyFaceUpCard: Int? {
         get {
-            var foundIndex: Int?
-            for index in cards.indices {
-                if cards[index].isFaceUp {
-                    if foundIndex == nil {
-                        foundIndex = index
-                    } else {
-                        return nil
-                    }
-                }
-            }
-            return foundIndex
+            return cards.indices.filter {
+                cards[$0].isFaceUp
+            }.oneAndOnly
+            
+//            var foundIndex: Int?
+//            for index in cards.indices {
+//                if cards[index].isFaceUp {
+//                    if foundIndex == nil {
+//                        foundIndex = index
+//                    } else {
+//                        return nil
+//                    }
+//                }
+//            }
+//            return foundIndex
         }
         set {
             for index in cards.indices {
@@ -65,17 +69,17 @@ struct Concentration {
         assert(cards.indices.contains(index),"Concentration.chooseCard(at: \(index)): chosen index not in the cards")
         if !cards[index].isMatched {
             flipCount += 1
-            if let matchIntex = indexOfOneAndOnlyFaceUpCard, matchIntex != index {
-                if cards[matchIntex].identifier == cards[index].identifier {
-                    cards[matchIntex].isMatched = true
+            if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
+                if cards[matchIndex] == cards[index] {
+                    cards[matchIndex].isMatched = true
                     cards[index].isMatched = true
                     score += 2
                 } else {
                     
-                    if alreadySeen.contains(matchIntex) {
+                    if alreadySeen.contains(matchIndex) {
                         score -= 1
                     } else {
-                        alreadySeen.append(matchIntex)
+                        alreadySeen.append(matchIndex)
                     }
                     if alreadySeen.contains(index) {
                         score -= 1
@@ -101,5 +105,11 @@ struct Concentration {
             cards += [card, card]
         }
         cards.shuffle()
+    }
+}
+
+extension Collection {
+    var oneAndOnly: Element? {
+        return count == 1 ? first: nil
     }
 }
